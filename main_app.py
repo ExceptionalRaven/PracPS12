@@ -47,7 +47,7 @@ def run_send():
 
 
 root = tk.Tk()
-root.title("Software Manager")
+root.title("Software Scanner")
 root.geometry("400x450")
 ttk.Button(root, text="1. Найти программы", command=run_scan).pack(fill=tk.X, pady=5)
 ttk.Button(root, text="2. Отправить на сервер", command=run_send).pack(fill=tk.X, pady=5)
