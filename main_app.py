@@ -7,8 +7,8 @@ import socket
 import scanner
 import sender
 
-#Webhook на который приходят запросы
-SERVER_URL = "https://webhook.site/12733338-6dc8-4665-85dd-287af93260ed"
+#Порт сервера на который приходят запросы
+SERVER_URL = "http://127.0.0.1:5000/upload"
 
 #Функция поиска приложений на ПК
 def run_scan():
