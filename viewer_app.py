@@ -2,11 +2,24 @@ import tkinter as tk
 from tkinter import ttk
 import sqlite3
 import json
+import sys
 import os
 
-# Путь к БД
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(BASE_DIR, 'software_data.db')
+
+def get_db_path():
+    # Если запущено как .exe (через PyInstaller)
+    if getattr(sys, 'frozen', False):
+        # Путь к папке, где находится сам .exe
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        # Путь к папке, где находится скрипт .py
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    return os.path.join(base_dir, 'software_data.db')
+
+
+db_path = get_db_path()
+print(f"DEBUG: Используется база данных по пути: {db_path}")
 
 # Debug на случай если файл БД не найден
 if not os.path.exists(db_path):
