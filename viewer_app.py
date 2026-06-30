@@ -41,6 +41,43 @@ def show_details(event):
     detail_window.title(f"Детали записи ID: {record_id}")
     detail_window.geometry("400x500")
 
+    # Поиск по подстроке
+    search_var = tk.StringVar()
+
+    def filter_tree(event=None):
+        search_text = search_var.get().lower() # Переводим запрос поиска в LC
+        # Очищаем текущее отображение
+        for item in tree_detail.get_children():
+            tree_detail.delete(item)
+        # Вставляем только подходящие
+        for app in full_software_list:
+            if search_text in app['name'].lower():
+                tree_detail.insert("", "end", values=(app['name'], app['version']))
+
+    tk.Label(detail_window, text="Поиск по названию:").pack(pady=5)
+    search_entry = tk.Entry(detail_window, textvariable=search_var)
+    search_entry.pack(fill=tk.X, padx=5)
+    search_entry.bind("<KeyRelease>", filter_tree)  # Фильтр срабатывает при каждом нажатии клавиши
+
+    tree_detail = ttk.Treeview(detail_window, columns=("name", "ver"), show="headings")
+    tree_detail.heading("name", text="Название")
+    tree_detail.heading("ver", text="Версия")
+    tree_detail.column("name", width=250)
+    tree_detail.column("ver", width=100)
+    tree_detail.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+    # Загрузка данных
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT software_data FROM inventory WHERE id = ?", (record_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        full_software_list = json.loads(row[0])  # Сохраняем в переменную для фильтрации
+        for app in full_software_list:
+            tree_detail.insert("", "end", values=(app['name'], app['version']))
+
     # Список ПО
     tree_detail = ttk.Treeview(detail_window, columns=("name", "ver"), show="headings")
     tree_detail.heading("name", text="Название")
